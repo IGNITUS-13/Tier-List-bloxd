@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,39 +9,19 @@
 <body>
     <header>
         <div class="logo">MAGMA<span>STUDIOS</span></div>
-        <p>Tabla de Clasificación Oficial de la Comunidad</p>
+        <p>Official Community Leaderboard & Tier List</p>
     </header>
 
-    <!-- FORMULARIO SIN LÍMITE DE JUGADORES -->
-    <section class="admin-panel">
-        <h3>Registrar Jugador</h3>
-        <div class="form-group">
-            <input type="text" id="playerName" placeholder="Nombre...">
-            <input type="number" id="playerPoints" placeholder="Puntos...">
-            <select id="playerRegion">
-                <option value="NA">NA</option>
-                <option value="EU">EU</option>
-                <option value="AS">AS</option>
-                <option value="SA">SA</option>
-                <option value="AF">AF</option>
-                <option value="AU">AU</option>
-            </select>
-            <input type="text" id="swordTier" placeholder="Tier Sword (PvP)...">
-            <input type="text" id="enchantedTier" placeholder="Tier Enchanted...">
-            <input type="text" id="skywarsTier" placeholder="Tier Skywars...">
-            <input type="text" id="bedwarsTier" placeholder="Tier Bedwars...">
-            <input type="text" id="potTier" placeholder="Tier Pot...">
-            <input type="text" id="holeTier" placeholder="Tier Hole...">
-            <input type="text" id="uhcTier" placeholder="Tier UHC...">
-            <input type="text" id="soupTier" placeholder="Tier Soup...">
-            <input type="text" id="parkourTier" placeholder="Tier Parkour...">
-            <button onclick="agregarJugador()">Añadir Jugador</button>
+    <!-- BARRA DE BÚSQUEDA LIMPIA EN LUGAR DE REGISTRAR -->
+    <section class="search-section">
+        <div class="search-container">
+            <input type="text" id="playerSearch" oninput="buscarJugador()" placeholder="Search player name...">
         </div>
     </section>
 
-    <!-- LAS DOS BARRAS DE FILTROS -->
+    <!-- BARRAS DE FILTROS (MODOS Y REGIONES) -->
     <div class="filter-container">
-        <!-- Barra de Modos -->
+        <!-- Modes -->
         <nav class="filter-menu" id="modo-menu">
             <button class="filter-btn active" onclick="cambiarModo('overall')">🏆 OVERALL</button>
             <button class="filter-btn" onclick="cambiarModo('sword')">⚔️ SWORD</button>
@@ -55,7 +35,7 @@
             <button class="filter-btn" onclick="cambiarModo('parkour')">🏃 PARKOUR</button>
         </nav>
 
-        <!-- Barra de Regiones -->
+        <!-- Regions -->
         <nav class="filter-menu" id="region-menu">
             <button class="filter-btn active" onclick="cambiarRegion('ALL')">ALL</button>
             <button class="filter-btn" onclick="cambiarRegion('NA')">NA</button>
@@ -94,15 +74,15 @@
         <table>
             <thead>
                 <tr>
-                    <th># Posición</th>
-                    <th>Jugador</th>
-                    <th>Región</th>
-                    <th>Puntos</th>
-                    <th>Rango / Tier</th>
+                    <th># Rank</th>
+                    <th>Player</th>
+                    <th>Region</th>
+                    <th>Points</th>
+                    <th>Ranks & Points / Tier</th>
                 </tr>
             </thead>
             <tbody id="leaderboard-body">
-                <!-- JavaScript meterá las filas aquí -->
+                <!-- JavaScript handles this -->
             </tbody>
         </table>
     </main>
