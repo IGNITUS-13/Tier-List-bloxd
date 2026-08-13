@@ -10,42 +10,32 @@ header { text-align: center; margin-bottom: 25px; }
 header .logo {
     font-size: 2.2rem;
     font-weight: 900;
-    color: #50c878; /* Verde Esmeralda */
+    color: #50c878; /* Emerald Green */
     letter-spacing: 3px;
     text-shadow: 0 0 10px rgba(80, 200, 120, 0.3);
 }
 header .logo span { color: #ffffff; }
 header p { color: #6b7280; margin-top: 5px; }
 
-.admin-panel {
-    background: #11121c;
+/* Input de búsqueda estilizado estilo Bloxd */
+.search-section {
     max-width: 1050px;
     margin: 20px auto;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #1f293d;
 }
-.admin-panel h3 { margin-top: 0; color: #50c878; text-align: center; }
-.form-group { display: flex; gap: 10px; flex-wrap: wrap; }
-.form-group input, .form-group select {
-    background: #1f202e;
-    border: 1px solid #374151;
-    color: #ffffff;
-    padding: 10px;
-    border-radius: 6px;
-    flex: 1 min-content;
-    min-width: 130px;
-}
-.form-group button {
-    background: #50c878;
-    border: none;
-    color: #000000;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
+.search-container input {
     width: 100%;
-    margin-top: 10px;
+    background: #11121c;
+    border: 1px solid #1f293d;
+    color: #ffffff;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border 0.2s;
+}
+.search-container input:focus {
+    border-color: #50c878;
+    outline: none;
 }
 
 .filter-container {
