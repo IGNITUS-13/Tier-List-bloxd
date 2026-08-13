@@ -1,0 +1,96 @@
+body {
+    background-color: #0d0d11;
+    color: #f1f1f6;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+header .logo {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ff4500;
+    letter-spacing: 2px;
+}
+header .logo span { color: #ffffff; }
+header p { color: #6c6c7d; margin-top: 5px; }
+
+/* Panel de Administración */
+.admin-panel {
+    background: #13131a;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #22222f;
+}
+.form-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.form-group input, .form-group button {
+    background: #1c1c24;
+    border: 1px solid #2d2d3d;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    flex: 1;
+}
+.form-group button {
+    background: #ff4500;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* El Podio Estilo BloxdTierlist */
+.podium-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    max-width: 900px;
+    margin: 40px auto;
+    height: 260px;
+}
+.podium-box {
+    background: #13131a;
+    border: 1px solid #22222f;
+    border-radius: 8px 8px 0 0;
+    width: 150px;
+    text-align: center;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.podium-avatar { font-size: 2.5rem; margin-bottom: 10px; }
+.podium-name { font-weight: bold; color: #fff; }
+.podium-points { color: #ff4500; font-size: 0.9rem; }
+.podium-step {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-top: 15px;
+    color: #2d2d3d;
+}
+.rank-1 { height: 220px; border-color: #ffd700; }
+.rank-2 { height: 170px; }
+.rank-3 { height: 140px; }
+
+/* Tabla General */
+.leaderboard-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #13131a;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #22222f;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+th, td { padding: 15px; border-bottom: 1px solid #1c1c24; }
+th { background: #181822; color: #8a8a9e; font-size: 0.9rem; }
+tbody tr:hover { background: #1c1c24; }
