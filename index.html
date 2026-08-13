@@ -12,14 +12,14 @@
         <p>Official Community Leaderboard & Tier List</p>
     </header>
 
-    <!-- BARRA DE BÚSQUEDA LIMPIA EN LUGAR DE REGISTRAR -->
+    <!-- SEARCH BAR -->
     <section class="search-section">
         <div class="search-container">
             <input type="text" id="playerSearch" oninput="buscarJugador()" placeholder="Search player name...">
         </div>
     </section>
 
-    <!-- BARRAS DE FILTROS (MODOS Y REGIONES) -->
+    <!-- FILTER MENUS -->
     <div class="filter-container">
         <!-- Modes -->
         <nav class="filter-menu" id="modo-menu">
@@ -47,7 +47,7 @@
         </nav>
     </div>
 
-    <!-- EL PODIO AUTOMÁTICO -->
+    <!-- AUTOMATIC PODIUM -->
     <section class="podium-container">
         <div class="podium-box rank-2">
             <div class="podium-avatar">👤</div>
@@ -69,12 +69,13 @@
         </div>
     </section>
 
-    <!-- TABLA GENERAL -->
+    <!-- LEADERBOARD TABLE WITH AVATAR COLUMN -->
     <main class="leaderboard-container">
         <table>
             <thead>
                 <tr>
                     <th># Rank</th>
+                    <th>Avatar</th>
                     <th>Player</th>
                     <th>Region</th>
                     <th>Points</th>
@@ -82,11 +83,12 @@
                 </tr>
             </thead>
             <tbody id="leaderboard-body">
-                <!-- JavaScript handles this -->
+                <!-- JavaScript handles this dynamically -->
             </tbody>
         </table>
     </main>
 
-    <script src="script.js"></script>
+    <!-- CONFIGURADO COMO MÓDULO PARA EL FUTURO SCRIPT DE FIREBASE -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
