@@ -9,39 +9,79 @@
 <body>
     <header>
         <div class="logo">MAGMA<span>STUDIOS</span></div>
-        <p>Tabla de Clasificación Oficial - PvP & Parkour</p>
+        <p>Tabla de Clasificación Oficial de la Comunidad</p>
     </header>
 
-    <!-- FORMULARIO PARA AÑADIR INFINITOS JUGADORES -->
+    <!-- FORMULARIO SIN LÍMITE DE JUGADORES -->
     <section class="admin-panel">
-        <h3>Agregar Nuevo Jugador</h3>
+        <h3>Registrar Jugador</h3>
         <div class="form-group">
-            <input type="text" id="playerName" placeholder="Nombre del jugador...">
-            <input type="number" id="playerPoints" placeholder="Puntos Totales...">
-            <input type="text" id="swordTier" placeholder="Tier Espada (ej: HT2, LT1)...">
-            <input type="text" id="parkourTier" placeholder="Tier Parkour (ej: LT2)...">
-            <button onclick="agregarJugador()">Añadir</button>
+            <input type="text" id="playerName" placeholder="Nombre...">
+            <input type="number" id="playerPoints" placeholder="Puntos...">
+            <select id="playerRegion">
+                <option value="NA">NA</option>
+                <option value="EU">EU</option>
+                <option value="AS">AS</option>
+                <option value="SA">SA</option>
+                <option value="AF">AF</option>
+                <option value="AU">AU</option>
+            </select>
+            <input type="text" id="swordTier" placeholder="Tier Sword (PvP)...">
+            <input type="text" id="enchantedTier" placeholder="Tier Enchanted...">
+            <input type="text" id="skywarsTier" placeholder="Tier Skywars...">
+            <input type="text" id="bedwarsTier" placeholder="Tier Bedwars...">
+            <input type="text" id="potTier" placeholder="Tier Pot...">
+            <input type="text" id="holeTier" placeholder="Tier Hole...">
+            <input type="text" id="uhcTier" placeholder="Tier UHC...">
+            <input type="text" id="soupTier" placeholder="Tier Soup...">
+            <input type="text" id="parkourTier" placeholder="Tier Parkour...">
+            <button onclick="agregarJugador()">Añadir Jugador</button>
         </div>
     </section>
 
-    <!-- EL PODIO (TOP 3 AUTOMÁTICO) -->
+    <!-- LAS DOS BARRAS DE FILTROS -->
+    <div class="filter-container">
+        <!-- Barra de Modos -->
+        <nav class="filter-menu" id="modo-menu">
+            <button class="filter-btn active" onclick="cambiarModo('overall')">🏆 OVERALL</button>
+            <button class="filter-btn" onclick="cambiarModo('sword')">⚔️ SWORD</button>
+            <button class="filter-btn" onclick="cambiarModo('enchanted')">✨ ENCHANTED</button>
+            <button class="filter-btn" onclick="cambiarModo('skywars')">☁️ SKYWARS</button>
+            <button class="filter-btn" onclick="cambiarModo('bedwars')">🛏️ BEDWARS</button>
+            <button class="filter-btn" onclick="cambiarModo('pot')">🧪 POT</button>
+            <button class="filter-btn" onclick="cambiarModo('hole')">🕳️ HOLE</button>
+            <button class="filter-btn" onclick="cambiarModo('uhc')">🍎 UHC</button>
+            <button class="filter-btn" onclick="cambiarModo('soup')">🍲 SOUP</button>
+            <button class="filter-btn" onclick="cambiarModo('parkour')">🏃 PARKOUR</button>
+        </nav>
+
+        <!-- Barra de Regiones -->
+        <nav class="filter-menu" id="region-menu">
+            <button class="filter-btn active" onclick="cambiarRegion('ALL')">ALL</button>
+            <button class="filter-btn" onclick="cambiarRegion('NA')">NA</button>
+            <button class="filter-btn" onclick="cambiarRegion('EU')">EU</button>
+            <button class="filter-btn" onclick="cambiarRegion('AS')">AS</button>
+            <button class="filter-btn" onclick="cambiarRegion('SA')">SA</button>
+            <button class="filter-btn" onclick="cambiarRegion('AF')">AF</button>
+            <button class="filter-btn" onclick="cambiarRegion('AU')">AU</button>
+        </nav>
+    </div>
+
+    <!-- EL PODIO AUTOMÁTICO -->
     <section class="podium-container">
-        <!-- Puesto 2 -->
-        <div class="podium-box rank-2" id="podio-2">
+        <div class="podium-box rank-2">
             <div class="podium-avatar">👤</div>
             <div class="podium-name" id="name-2">-</div>
             <div class="podium-points" id="points-2">0 pts</div>
             <div class="podium-step">2</div>
         </div>
-        <!-- Puesto 1 -->
-        <div class="podium-box rank-1" id="podio-1">
+        <div class="podium-box rank-1">
             <div class="podium-avatar">👑</div>
             <div class="podium-name" id="name-1">-</div>
             <div class="podium-points" id="points-1">0 pts</div>
             <div class="podium-step">1</div>
         </div>
-        <!-- Puesto 3 -->
-        <div class="podium-box rank-3" id="podio-3">
+        <div class="podium-box rank-3">
             <div class="podium-avatar">👤</div>
             <div class="podium-name" id="name-3">-</div>
             <div class="podium-points" id="points-3">0 pts</div>
@@ -49,20 +89,20 @@
         </div>
     </section>
 
-    <!-- TABLA DE CLASIFICACIÓN GENERAL -->
+    <!-- TABLA GENERAL -->
     <main class="leaderboard-container">
         <table>
             <thead>
                 <tr>
                     <th># Posición</th>
                     <th>Jugador</th>
+                    <th>Región</th>
                     <th>Puntos</th>
-                    <th>Enchanted Sword</th>
-                    <th>Parkour</th>
+                    <th>Rango / Tier</th>
                 </tr>
             </thead>
             <tbody id="leaderboard-body">
-                <!-- Los jugadores se meterán aquí con JavaScript -->
+                <!-- JavaScript meterá las filas aquí -->
             </tbody>
         </table>
     </main>
