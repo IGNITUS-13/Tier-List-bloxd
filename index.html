@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloxd Leaderboard | MAGMA STUDIOS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">MAGMA<span>STUDIOS</span></div>
+        <p>Tabla de Clasificación Oficial - PvP & Parkour</p>
+    </header>
+
+    <!-- FORMULARIO PARA AÑADIR INFINITOS JUGADORES -->
+    <section class="admin-panel">
+        <h3>Agregar Nuevo Jugador</h3>
+        <div class="form-group">
+            <input type="text" id="playerName" placeholder="Nombre del jugador...">
+            <input type="number" id="playerPoints" placeholder="Puntos Totales...">
+            <input type="text" id="swordTier" placeholder="Tier Espada (ej: HT2, LT1)...">
+            <input type="text" id="parkourTier" placeholder="Tier Parkour (ej: LT2)...">
+            <button onclick="agregarJugador()">Añadir</button>
+        </div>
+    </section>
+
+    <!-- EL PODIO (TOP 3 AUTOMÁTICO) -->
+    <section class="podium-container">
+        <!-- Puesto 2 -->
+        <div class="podium-box rank-2" id="podio-2">
+            <div class="podium-avatar">👤</div>
+            <div class="podium-name" id="name-2">-</div>
+            <div class="podium-points" id="points-2">0 pts</div>
+            <div class="podium-step">2</div>
+        </div>
+        <!-- Puesto 1 -->
+        <div class="podium-box rank-1" id="podio-1">
+            <div class="podium-avatar">👑</div>
+            <div class="podium-name" id="name-1">-</div>
+            <div class="podium-points" id="points-1">0 pts</div>
+            <div class="podium-step">1</div>
+        </div>
+        <!-- Puesto 3 -->
+        <div class="podium-box rank-3" id="podio-3">
+            <div class="podium-avatar">👤</div>
+            <div class="podium-name" id="name-3">-</div>
+            <div class="podium-points" id="points-3">0 pts</div>
+            <div class="podium-step">3</div>
+        </div>
+    </section>
+
+    <!-- TABLA DE CLASIFICACIÓN GENERAL -->
+    <main class="leaderboard-container">
+        <table>
+            <thead>
+                <tr>
+                    <th># Posición</th>
+                    <th>Jugador</th>
+                    <th>Puntos</th>
+                    <th>Enchanted Sword</th>
+                    <th>Parkour</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+                <!-- Los jugadores se meterán aquí con JavaScript -->
+            </tbody>
+        </table>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
