@@ -3,92 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bloxd Leaderboard | MAGMA STUDIOS</title>
+    <meta name="theme-color" content="#ff5a1f">
+    <title>Bloxd PvP Tier List | MAGMA STUDIOS</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="logo">MAGMA<span>STUDIOS</span></div>
-        <p>Official Community Leaderboard & Tier List</p>
+    <div class="page-glow"></div>
+
+    <header class="site-header">
+        <div class="brand">
+            <div class="brand-mark">M</div>
+            <div>
+                <div class="logo">MAGMA<span>STUDIOS</span></div>
+                <div class="subtitle">BLOXD PVP • OFFICIAL COMMUNITY TIER LIST</div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <a href="#" class="header-link active">🏆 Rankings</a>
+            <a href="#leaderboard" class="header-link">📊 Leaderboard</a>
+            <a href="#modes" class="header-link">⚔️ Modes</a>
+        </div>
+
+        <label class="top-search">
+            <span>⌕</span>
+            <input type="text" id="playerSearch" placeholder="Search player..." autocomplete="off">
+            <kbd>/</kbd>
+        </label>
     </header>
 
-    <!-- SEARCH BAR -->
-    <section class="search-section">
-        <div class="search-container">
-            <input type="text" id="playerSearch"  placeholder="Search player name...">
-        </div>
-    </section>
+    <main>
+        <section class="hero">
+            <div>
+                <div class="eyebrow">MAGMA STUDIOS • BLOXD PVP</div>
+                <h1>Player Rankings</h1>
+                <p>Compete. Climb. Prove your tier.</p>
+            </div>
+            <div class="hero-badge">🔥 LIVE RANKINGS</div>
+        </section>
 
-    <!-- FILTER MENUS -->
-    <div class="filter-container">
-        <!-- Modes -->
-        <nav class="filter-menu" id="modo-menu">
-            <button class="filter-btn active" data-mode="overall">🏆 OVERALL</button>
-            <button class="filter-btn" data-mode="sword">⚔️ SWORD</button>
-            <button class="filter-btn" data-mode="enchanted">✨ ENCHANTED</button>
-            <button class="filter-btn" data-mode="skywars">☁️ SKYWARS</button>
-            <button class="filter-btn" data-mode="bedwars">🛏️ BEDWARS</button>
-            <button class="filter-btn" data-mode="pot">🧪 POT</button>
-            <button class="filter-btn" data-mode="hole">🕳️ HOLE</button>
-            <button class="filter-btn" data-mode="uhc">🍎 UHC</button>
-            <button class="filter-btn" data-mode="soup">🍲 SOUP</button>
-            <button class="filter-btn" data-mode="parkour">🏃 PARKOUR</button>
-        </nav>
+        <section class="controls" id="modes">
+            <div class="section-label">GAME MODES</div>
+            <nav class="mode-tabs" id="modo-menu">
+                <button class="mode-tab active" data-mode="overall"><span>🏆</span> Overall</button>
+                <button class="mode-tab" data-mode="sword"><span>⚔️</span> Sword</button>
+                <button class="mode-tab" data-mode="enchanted"><span>✨</span> Enchanted</button>
+                <button class="mode-tab" data-mode="skywars"><span>☁️</span> SkyWars</button>
+                <button class="mode-tab" data-mode="bedwars"><span>🛏️</span> BedWars</button>
+                <button class="mode-tab" data-mode="pot"><span>🧪</span> Pot</button>
+                <button class="mode-tab" data-mode="hole"><span>🕳️</span> Hole</button>
+                <button class="mode-tab" data-mode="uhc"><span>🍎</span> UHC</button>
+                <button class="mode-tab" data-mode="soup"><span>🍲</span> Soup</button>
+                <button class="mode-tab" data-mode="parkour"><span>🏃</span> Parkour</button>
+            </nav>
 
-        <!-- Regions -->
-        <nav class="filter-menu" id="region-menu">
-            <button class="filter-btn active" data-region="ALL">ALL</button>
-            <button class="filter-btn" data-region="NA">NA</button>
-            <button class="filter-btn" data-region="EU">EU</button>
-            <button class="filter-btn" data-region="AS">AS</button>
-            <button class="filter-btn" data-region="SA">SA</button>
-            <button class="filter-btn" data-region="AF">AF</button>
-            <button class="filter-btn" data-region="AU">AU</button>
-        </nav>
-    </div>
+            <div class="region-row">
+                <span class="section-label">REGION</span>
+                <nav class="region-tabs" id="region-menu">
+                    <button class="region-tab active" data-region="ALL">ALL</button>
+                    <button class="region-tab" data-region="NA">NA</button>
+                    <button class="region-tab" data-region="EU">EU</button>
+                    <button class="region-tab" data-region="AS">AS</button>
+                    <button class="region-tab" data-region="SA">SA</button>
+                    <button class="region-tab" data-region="AF">AF</button>
+                    <button class="region-tab" data-region="AU">AU</button>
+                </nav>
+            </div>
+        </section>
 
-    <!-- AUTOMATIC PODIUM -->
-    <section class="podium-container">
-        <div class="podium-box rank-2">
-            <div class="podium-avatar">👤</div>
-            <div class="podium-name" id="name-2">-</div>
-            <div class="podium-points" id="points-2">0 pts</div>
-            <div class="podium-step">2</div>
-        </div>
-        <div class="podium-box rank-1">
-            <div class="podium-avatar">👑</div>
-            <div class="podium-name" id="name-1">-</div>
-            <div class="podium-points" id="points-1">0 pts</div>
-            <div class="podium-step">1</div>
-        </div>
-        <div class="podium-box rank-3">
-            <div class="podium-avatar">👤</div>
-            <div class="podium-name" id="name-3">-</div>
-            <div class="podium-points" id="points-3">0 pts</div>
-            <div class="podium-step">3</div>
-        </div>
-    </section>
+        <section class="podium-container" aria-label="Top players">
+            <article class="podium-card second">
+                <div class="place-number">02</div>
+                <div class="podium-avatar" id="avatar-2">👤</div>
+                <div class="podium-title ace">COMBAT ACE</div>
+                <div class="podium-name" id="name-2">-</div>
+                <div class="podium-points" id="points-2">0 pts</div>
+            </article>
 
-    <!-- LEADERBOARD TABLE WITH AVATAR COLUMN -->
-    <main class="leaderboard-container">
-        <table>
-            <thead>
-                <tr>
-                    <th># Rank</th>
-                    <th>Avatar</th>
-                    <th>Player</th>
-                    <th>Region</th>
-                    <th>Points</th>
-                    <th>Ranks & Points / Tier</th>
-                </tr>
-            </thead>
-            <tbody id="leaderboard-body">
-                <!-- JavaScript handles this dynamically -->
-            </tbody>
-        </table>
+            <article class="podium-card first">
+                <div class="crown">♛</div>
+                <div class="place-number">01</div>
+                <div class="podium-avatar" id="avatar-1">👑</div>
+                <div class="podium-title master">COMBAT MASTER</div>
+                <div class="podium-name" id="name-1">-</div>
+                <div class="podium-points" id="points-1">0 pts</div>
+            </article>
+
+            <article class="podium-card third">
+                <div class="place-number">03</div>
+                <div class="podium-avatar" id="avatar-3">👤</div>
+                <div class="podium-title ace">COMBAT ACE</div>
+                <div class="podium-name" id="name-3">-</div>
+                <div class="podium-points" id="points-3">0 pts</div>
+            </article>
+        </section>
+
+        <section class="leaderboard-container" id="leaderboard">
+            <div class="leaderboard-head">
+                <div>
+                    <span class="eyebrow">RANKED PLAYERS</span>
+                    <h2>Leaderboard</h2>
+                </div>
+                <div class="live-dot"><span></span> Firebase Live</div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>PLAYER</th>
+                            <th>REGION</th>
+                            <th>POINTS</th>
+                            <th>TIERS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                        <tr class="loading-row"><td colspan="5">Loading leaderboard...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
-    <!-- CONFIGURADO COMO MÓDULO PARA EL FUTURO SCRIPT DE FIREBASE -->
+    <footer>
+        MAGMA STUDIOS • BLOXD PVP TIER LIST
+    </footer>
+
     <script type="module" src="script.js"></script>
 </body>
 </html>
