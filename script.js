@@ -1,25 +1,39 @@
-// Base de datos de ejemplo con las regiones y modos correctos
-let jugadores = [
-    { nombre: "danjaxxx", puntos: 250, region: "NA", sword: "LT1", enchanted: "HT1", skywars: "HT2", bedwars: "HT1", pot: "HT1", hole: "HT1", uhc: "HT1", soup: "HT1", parkour: "HT2" },
-    { nombre: "v3ng3anc3__", puntos: 170, region: "EU", sword: "HT1", enchanted: "HT3", skywars: "LT1", bedwars: "HT3", pot: "LT1", hole: "HT2", uhc: "HT2", soup: "LT1", parkour: "LT1" },
-    { nombre: "vertbloxd", puntos: 161, region: "NA", sword: "LT3", enchanted: "LT1", skywars: "LT2", bedwars: "LT1", pot: "LT2", hole: "LT1", uhc: "LT1", soup: "LT2", parkour: "LT2" }
-];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+    getFirestore,
+    collection,
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const firebaseConfig = {
+    apiKey: "AIzaSyCENRrHraChbm304WpJ4TsP3Qr4gSUChNI",
+    authDomain: "bloxd-pvp-tierlist.firebaseapp.com",
+    databaseURL: "https://bloxd-pvp-tierlist-default-rtdb.firebaseio.com",
+    projectId: "bloxd-pvp-tierlist",
+    storageBucket: "bloxd-pvp-tierlist.firebasestorage.app",
+    messagingSenderId: "15316171096",
+    appId: "1:15316171096:web:e3c0bdc1238dd8e6dfcd2d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let jugadores = [];
 let modoActual = 'overall';
 let regionActual = 'ALL';
 let busquedaActual = '';
 
-function cambiarModo(nuevoModo) {
+function cambiarModo(nuevoModo, boton) {
     modoActual = nuevoModo;
     document.querySelectorAll('#modo-menu .filter-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    if (boton) boton.classList.add('active');
     actualizarLeaderboard();
 }
 
-function cambiarRegion(nuevaRegion) {
+function cambiarRegion(nuevaRegion, boton) {
     regionActual = nuevaRegion;
     document.querySelectorAll('#region-menu .filter-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    if (boton) boton.classList.add('active');
     actualizarLeaderboard();
 }
 
@@ -30,21 +44,22 @@ function buscarJugador() {
 
 function actualizarLeaderboard() {
     let filtrados = jugadores.filter(j => {
-        let matchRegion = regionActual === 'ALL' || j.region === regionActual;
-        let matchSearch = j.nombre.toLowerCase().includes(busquedaActual);
+        const nombre = String(j.nombre || '');
+        const matchRegion = regionActual === 'ALL' || j.region === regionActual;
+        const matchSearch = nombre.toLowerCase().includes(busquedaActual);
         return matchRegion && matchSearch;
     });
 
-    filtrados.sort((a, b) => b.puntos - a.puntos);
+    filtrados.sort((a, b) => Number(b.puntos || 0) - Number(a.puntos || 0));
 
     document.getElementById("name-1").innerText = filtrados[0] ? filtrados[0].nombre : "-";
-    document.getElementById("points-1").innerText = filtrados[0] ? (modoActual === 'overall' ? filtrados[0].puntos + " pts" : "Tier: " + filtrados[0][modoActual]) : "0 pts";
+    document.getElementById("points-1").innerText = filtrados[0] ? (modoActual === 'overall' ? filtrados[0].puntos + " pts" : "Tier: " + (filtrados[0][modoActual] || "N/A")) : "0 pts";
 
     document.getElementById("name-2").innerText = filtrados[1] ? filtrados[1].nombre : "-";
-    document.getElementById("points-2").innerText = filtrados[1] ? (modoActual === 'overall' ? filtrados[1].puntos + " pts" : "Tier: " + filtrados[1][modoActual]) : "0 pts";
+    document.getElementById("points-2").innerText = filtrados[1] ? (modoActual === 'overall' ? filtrados[1].puntos + " pts" : "Tier: " + (filtrados[1][modoActual] || "N/A")) : "0 pts";
 
     document.getElementById("name-3").innerText = filtrados[2] ? filtrados[2].nombre : "-";
-    document.getElementById("points-3").innerText = filtrados[2] ? (modoActual === 'overall' ? filtrados[2].puntos + " pts" : "Tier: " + filtrados[2][modoActual]) : "0 pts";
+    document.getElementById("points-3").innerText = filtrados[2] ? (modoActual === 'overall' ? filtrados[2].puntos + " pts" : "Tier: " + (filtrados[2][modoActual] || "N/A")) : "0 pts";
 
     const tbody = document.getElementById("leaderboard-body");
     tbody.innerHTML = "";
@@ -52,37 +67,62 @@ function actualizarLeaderboard() {
     filtrados.forEach((jugador, index) => {
         let contenidoRango = '';
 
-        // SI EL MODO ES OVERALL, DIBUJA TODOS LOS TIERS CON SUS ÍCONOS
         if (modoActual === 'overall') {
             contenidoRango = `
                 <div class="all-tiers-container" style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">⚔️ ${jugador.sword}</span>
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">✨ ${jugador.enchanted}</span>
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">☁️ ${jugador.skywars}</span>
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🛏️ ${jugador.bedwars}</span>
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🧪 ${jugador.pot}</span>
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🕳️ ${jugador.hole}</span>
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🍎 ${jugador.uhc}</span>
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🍲 ${jugador.soup}</span>
-                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🏃 ${jugador.parkour}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">⚔️ ${jugador.sword || 'N/A'}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">✨ ${jugador.enchanted || 'N/A'}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">☁️ ${jugador.skywars || 'N/A'}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🛏️ ${jugador.bedwars || 'N/A'}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🧪 ${jugador.pot || 'N/A'}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🕳️ ${jugador.hole || 'N/A'}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🍎 ${jugador.uhc || 'N/A'}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🍲 ${jugador.soup || 'N/A'}</span>
+                    <span style="background: #1c1a27; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #3c2a6b; color: #a78bfa;">🏃 ${jugador.parkour || 'N/A'}</span>
                 </div>
             `;
         } else {
-            // SI SELECCIONAS UN MODO INDIVIDUAL, SOLO MUESTRA ESE TIER
             contenidoRango = `<span style="color: #a78bfa; font-weight: bold; background: #1c1a27; padding: 6px 12px; border-radius: 4px; border: 1px solid #3c2a6b;">${jugador[modoActual] || 'N/A'}</span>`;
         }
+
+        const avatar = jugador.avatarUrl
+            ? `<img src="${jugador.avatarUrl}" alt="" width="36" height="36" style="border-radius: 50%; object-fit: cover;">`
+            : '👤';
 
         const fila = `
             <tr>
                 <td><strong>#${index + 1}</strong></td>
-                <td>${jugador.nombre}</td>
-                <td><span style="color: #6b7280;">${jugador.region}</span></td>
-                <td style="color: #50c878; font-weight: bold;">${jugador.puntos} pts</td>
+                <td>${avatar}</td>
+                <td>${jugador.nombre || 'Unknown'}</td>
+                <td><span style="color: #6b7280;">${jugador.region || 'N/A'}</span></td>
+                <td style="color: #50c878; font-weight: bold;">${jugador.puntos || 0} pts</td>
                 <td>${contenidoRango}</td>
             </tr>
         `;
         tbody.innerHTML += fila;
     });
 }
+
+document.getElementById("playerSearch").addEventListener("input", buscarJugador);
+
+document.querySelectorAll('#modo-menu .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => cambiarModo(btn.dataset.mode, btn));
+});
+
+document.querySelectorAll('#region-menu .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => cambiarRegion(btn.dataset.region, btn));
+});
+
+onSnapshot(collection(db, "leaderboard"), snapshot => {
+    jugadores = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+    actualizarLeaderboard();
+}, error => {
+    console.error("Error leyendo leaderboard de Firebase:", error);
+    document.getElementById("leaderboard-body").innerHTML =
+        '<tr><td colspan="6">No se pudo cargar el leaderboard.</td></tr>';
+});
 
 actualizarLeaderboard();
