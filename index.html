@@ -15,7 +15,7 @@
     <!-- SEARCH BAR -->
     <section class="search-section">
         <div class="search-container">
-            <input type="text" id="playerSearch" oninput="buscarJugador()" placeholder="Search player name...">
+            <input type="text" id="playerSearch"  placeholder="Search player name...">
         </div>
     </section>
 
@@ -23,27 +23,27 @@
     <div class="filter-container">
         <!-- Modes -->
         <nav class="filter-menu" id="modo-menu">
-            <button class="filter-btn active" onclick="cambiarModo('overall')">🏆 OVERALL</button>
-            <button class="filter-btn" onclick="cambiarModo('sword')">⚔️ SWORD</button>
-            <button class="filter-btn" onclick="cambiarModo('enchanted')">✨ ENCHANTED</button>
-            <button class="filter-btn" onclick="cambiarModo('skywars')">☁️ SKYWARS</button>
-            <button class="filter-btn" onclick="cambiarModo('bedwars')">🛏️ BEDWARS</button>
-            <button class="filter-btn" onclick="cambiarModo('pot')">🧪 POT</button>
-            <button class="filter-btn" onclick="cambiarModo('hole')">🕳️ HOLE</button>
-            <button class="filter-btn" onclick="cambiarModo('uhc')">🍎 UHC</button>
-            <button class="filter-btn" onclick="cambiarModo('soup')">🍲 SOUP</button>
-            <button class="filter-btn" onclick="cambiarModo('parkour')">🏃 PARKOUR</button>
+            <button class="filter-btn active" data-mode="overall">🏆 OVERALL</button>
+            <button class="filter-btn" data-mode="sword">⚔️ SWORD</button>
+            <button class="filter-btn" data-mode="enchanted">✨ ENCHANTED</button>
+            <button class="filter-btn" data-mode="skywars">☁️ SKYWARS</button>
+            <button class="filter-btn" data-mode="bedwars">🛏️ BEDWARS</button>
+            <button class="filter-btn" data-mode="pot">🧪 POT</button>
+            <button class="filter-btn" data-mode="hole">🕳️ HOLE</button>
+            <button class="filter-btn" data-mode="uhc">🍎 UHC</button>
+            <button class="filter-btn" data-mode="soup">🍲 SOUP</button>
+            <button class="filter-btn" data-mode="parkour">🏃 PARKOUR</button>
         </nav>
 
         <!-- Regions -->
         <nav class="filter-menu" id="region-menu">
-            <button class="filter-btn active" onclick="cambiarRegion('ALL')">ALL</button>
-            <button class="filter-btn" onclick="cambiarRegion('NA')">NA</button>
-            <button class="filter-btn" onclick="cambiarRegion('EU')">EU</button>
-            <button class="filter-btn" onclick="cambiarRegion('AS')">AS</button>
-            <button class="filter-btn" onclick="cambiarRegion('SA')">SA</button>
-            <button class="filter-btn" onclick="cambiarRegion('AF')">AF</button>
-            <button class="filter-btn" onclick="cambiarRegion('AU')">AU</button>
+            <button class="filter-btn active" data-region="ALL">ALL</button>
+            <button class="filter-btn" data-region="NA">NA</button>
+            <button class="filter-btn" data-region="EU">EU</button>
+            <button class="filter-btn" data-region="AS">AS</button>
+            <button class="filter-btn" data-region="SA">SA</button>
+            <button class="filter-btn" data-region="AF">AF</button>
+            <button class="filter-btn" data-region="AU">AU</button>
         </nav>
     </div>
 
