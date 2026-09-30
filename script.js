@@ -1,174 +1,263 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-    getFirestore,
-    collection,
-    onSnapshot
+  getFirestore,
+  collection,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCENRrHraChbm304WpJ4TsP3Qr4gSUChNI",
-    authDomain: "bloxd-pvp-tierlist.firebaseapp.com",
-    databaseURL: "https://bloxd-pvp-tierlist-default-rtdb.firebaseio.com",
-    projectId: "bloxd-pvp-tierlist",
-    storageBucket: "bloxd-pvp-tierlist.firebasestorage.app",
-    messagingSenderId: "15316171096",
-    appId: "1:15316171096:web:e3c0bdc1238dd8e6dfcd2d"
+  apiKey: "AIzaSyCENRrHraChbm304WpJ4TsP3Qr4gSUChNI",
+  authDomain: "bloxd-pvp-tierlist.firebaseapp.com",
+  databaseURL: "https://bloxd-pvp-tierlist-default-rtdb.firebaseio.com",
+  projectId: "bloxd-pvp-tierlist",
+  storageBucket: "bloxd-pvp-tierlist.firebasestorage.app",
+  messagingSenderId: "15316171096",
+  appId: "1:15316171096:web:e3c0bdc1238dd8e6dfcd2d"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const MODES = [
-    ["sword", "⚔️", "Sword"],
-    ["enchanted", "✨", "Enchanted"],
-    ["skywars", "☁️", "SkyWars"],
-    ["bedwars", "🛏️", "BedWars"],
-    ["pot", "🧪", "Pot"],
-    ["hole", "🕳️", "Hole"],
-    ["uhc", "🍎", "UHC"],
-    ["soup", "🍲", "Soup"],
-    ["parkour", "🏃", "Parkour"]
+  ["sword", "⚔️", "Sword"],
+  ["enchanted", "✨", "Enchanted"],
+  ["skywars", "☁️", "SkyWars"],
+  ["bedwars", "🛏️", "BedWars"],
+  ["pot", "🧪", "Pot"],
+  ["hole", "🕳️", "Hole"],
+  ["uhc", "🍎", "UHC"],
+  ["soup", "🍲", "Soup"],
+  ["parkour", "🏃", "Parkour"]
 ];
+
+const REGION_NAMES = {
+  ALL: "ALL",
+  NA: "NORTH AMERICA",
+  EU: "EUROPE",
+  AS: "ASIA",
+  SA: "SOUTH AMERICA",
+  AF: "AFRICA",
+  AU: "AUSTRALIA"
+};
 
 let jugadores = [];
 let modoActual = "overall";
 let regionActual = "ALL";
 let busquedaActual = "";
+let lastSync = null;
 
 const $ = id => document.getElementById(id);
 
-function cambiarModo(nuevoModo, boton) {
-    modoActual = nuevoModo;
-    document.querySelectorAll("#modo-menu .mode-tab").forEach(btn => btn.classList.remove("active"));
-    boton?.classList.add("active");
-    actualizarLeaderboard();
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[char]));
 }
 
-function cambiarRegion(nuevaRegion, boton) {
-    regionActual = nuevaRegion;
-    document.querySelectorAll("#region-menu .region-tab").forEach(btn => btn.classList.remove("active"));
-    boton?.classList.add("active");
-    actualizarLeaderboard();
+function tierScore(tier) {
+  const value = String(tier || "").toUpperCase().trim();
+  if (value === "N/A" || !value) return 999;
+  const match = value.match(/^(HT|LT|T)([1-5])$/);
+  if (!match) return 998;
+
+  const type = match[1];
+  const level = Number(match[2]);
+
+  if (type === "HT") return level;
+  if (type === "LT") return 10 + level;
+  return 20 + level;
+}
+
+function tierClass(tier) {
+  const value = String(tier || "").toUpperCase();
+  if (value.startsWith("HT")) return "tier-ht";
+  if (value.startsWith("LT")) return "tier-lt";
+  if (value.startsWith("T")) return "tier-t";
+  return "tier-na";
 }
 
 function getTier(player, mode) {
-    return mode === "overall" ? null : (player[mode] || "N/A");
-}
-
-function tierRank(tier) {
-    const value = String(tier || "").toUpperCase();
-    const match = value.match(/([HTL])(\d+)/);
-    if (!match) return 999;
-    const level = Number(match[2]);
-    const type = match[1];
-    return (type === "HT" ? 0 : type === "LT" ? 10 : 20) + level;
+  return mode === "overall" ? null : (player[mode] || "N/A");
 }
 
 function sortPlayers(list) {
-    return [...list].sort((a, b) => {
-        if (modoActual !== "overall") {
-            const tierDiff = tierRank(a[modoActual]) - tierRank(b[modoActual]);
-            if (tierDiff !== 0) return tierDiff;
-        }
-        return Number(b.puntos || 0) - Number(a.puntos || 0);
-    });
+  return [...list].sort((a, b) => {
+    if (modoActual !== "overall") {
+      const aTier = tierScore(a[modoActual]);
+      const bTier = tierScore(b[modoActual]);
+
+      if (aTier !== bTier) return aTier - bTier;
+    }
+
+    const pointsDiff = Number(b.puntos || 0) - Number(a.puntos || 0);
+    if (pointsDiff !== 0) return pointsDiff;
+
+    return String(a.nombre || "").localeCompare(String(b.nombre || ""));
+  });
 }
 
 function avatarHtml(player, className = "player-avatar") {
-    if (player.avatarUrl) {
-        return `<img class="${className}" src="${player.avatarUrl}" alt="" loading="lazy">`;
-    }
-    return `<div class="${className}">👤</div>`;
+  if (player.avatarUrl) {
+    return `<img class="${className}" src="${esc(player.avatarUrl)}" alt="" loading="lazy">`;
+  }
+  return `<div class="${className} fallback-avatar">👤</div>`;
 }
 
 function podiumContent(player, place) {
-    $(`name-${place}`).textContent = player?.nombre || "-";
-    $(`points-${place}`).textContent = player
-        ? (modoActual === "overall" ? `${Number(player.puntos || 0)} pts` : `Tier: ${player[modoActual] || "N/A"}`)
-        : "0 pts";
+  $(`name-${place}`).textContent = player?.nombre || "—";
 
-    const avatar = $(`avatar-${place}`);
-    avatar.innerHTML = player?.avatarUrl
-        ? `<img src="${player.avatarUrl}" alt="" loading="lazy">`
-        : (place === 1 ? "👑" : "👤");
+  $(`points-${place}`).textContent = player
+    ? (modoActual === "overall"
+      ? `${Number(player.puntos || 0).toLocaleString()} pts`
+      : `Tier ${player[modoActual] || "N/A"}`)
+    : "—";
+
+  const avatar = $(`avatar-${place}`);
+  avatar.innerHTML = player?.avatarUrl
+    ? `<img src="${esc(player.avatarUrl)}" alt="" loading="lazy">`
+    : (place === 1 ? "👑" : "👤");
 }
 
-function actualizarLeaderboard() {
-    const filtrados = jugadores.filter(j => {
-        const nombre = String(j.nombre || "");
-        const matchRegion = regionActual === "ALL" || j.region === regionActual;
-        const matchSearch = nombre.toLowerCase().includes(busquedaActual);
-        return matchRegion && matchSearch;
-    });
+function modeChip(key, icon, label, player) {
+  const tier = player[key] || "N/A";
+  return `
+    <span class="tier-chip ${tierClass(tier)}" title="${esc(label)}">
+      <span>${icon}</span><b>${esc(tier)}</b>
+    </span>
+  `;
+}
 
-    const ordenados = sortPlayers(filtrados);
+function updateStats(filteredCount) {
+  $("stat-players").textContent = filteredCount.toLocaleString();
+  $("stat-mode").textContent = modoActual === "overall"
+    ? "OVERALL"
+    : (MODES.find(mode => mode[0] === modoActual)?.[2] || modoActual).toUpperCase();
+  $("stat-sync").textContent = lastSync ? "LIVE" : "CONNECTING";
+}
 
-    podiumContent(ordenados[0], 1);
-    podiumContent(ordenados[1], 2);
-    podiumContent(ordenados[2], 3);
+function updateLeaderboard() {
+  const filtered = jugadores.filter(player => {
+    const name = String(player.nombre || player.displayName || "");
+    const regionMatch = regionActual === "ALL" || String(player.region || "").toUpperCase() === regionActual;
+    const searchMatch = name.toLowerCase().includes(busquedaActual);
+    return regionMatch && searchMatch;
+  });
 
-    const tbody = $("leaderboard-body");
+  const ordered = sortPlayers(filtered);
 
-    if (!ordenados.length) {
-        tbody.innerHTML = '<tr><td colspan="5" class="empty">No players found for these filters.</td></tr>';
-        return;
-    }
+  updateStats(ordered.length);
+  podiumContent(ordered[0], 1);
+  podiumContent(ordered[1], 2);
+  podiumContent(ordered[2], 3);
 
-    tbody.innerHTML = ordenados.map((jugador, index) => {
-        const chips = modoActual === "overall"
-            ? MODES.map(([key, icon, label]) =>
-                `<span class="tier-chip" title="${label}">${icon} <b>${jugador[key] || "N/A"}</b></span>`
-            ).join("")
-            : `<span class="tier-chip">${MODES.find(m => m[0] === modoActual)?.[1] || "⚔️"} <b>${jugador[modoActual] || "N/A"}</b></span>`;
+  const tbody = $("leaderboard-body");
 
-        return `
-            <tr>
-                <td class="rank-cell">#${index + 1}</td>
-                <td>
-                    <div class="player-cell">
-                        ${avatarHtml(jugador)}
-                        <span class="player-name">${jugador.nombre || "Unknown"}</span>
-                    </div>
-                </td>
-                <td><span class="region-badge">${jugador.region || "N/A"}</span></td>
-                <td class="points-cell">${Number(jugador.puntos || 0)} pts</td>
-                <td><div class="tiers">${chips}</div></td>
-            </tr>
-        `;
-    }).join("");
+  if (!ordered.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="empty">
+          <div class="empty-icon">🔥</div>
+          <b>No players found</b>
+          <span>Try another player, region or mode.</span>
+        </td>
+      </tr>`;
+    return;
+  }
+
+  tbody.innerHTML = ordered.map((player, index) => {
+    const rank = index + 1;
+    const rankClass = rank <= 3 ? ` top-rank rank-${rank}` : "";
+
+    const chips = modoActual === "overall"
+      ? MODES.map(([key, icon, label]) => modeChip(key, icon, label, player)).join("")
+      : modeChip(
+          modoActual,
+          MODES.find(mode => mode[0] === modoActual)?.[1] || "•",
+          MODES.find(mode => mode[0] === modoActual)?.[2] || modoActual,
+          player
+        );
+
+    return `
+      <tr class="${rankClass}">
+        <td class="rank-cell">
+          <span class="rank-number">${rank <= 3 ? ["🥇", "🥈", "🥉"][rank - 1] : "#" + rank}</span>
+        </td>
+        <td>
+          <div class="player-cell">
+            ${avatarHtml(player)}
+            <div>
+              <span class="player-name">${esc(player.nombre || "Unknown")}</span>
+              <small>${esc(player.displayName || "")}</small>
+            </div>
+          </div>
+        </td>
+        <td><span class="region-badge">${esc(player.region || "N/A")}</span></td>
+        <td class="points-cell">${Number(player.puntos || 0).toLocaleString()} <small>PTS</small></td>
+        <td><div class="tiers">${chips}</div></td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function setMode(mode, button) {
+  modoActual = mode;
+  document.querySelectorAll("#modo-menu .mode-tab").forEach(btn => btn.classList.remove("active"));
+  button.classList.add("active");
+  updateLeaderboard();
+}
+
+function setRegion(region, button) {
+  regionActual = region;
+  document.querySelectorAll("#region-menu .region-tab").forEach(btn => btn.classList.remove("active"));
+  button.classList.add("active");
+  updateLeaderboard();
 }
 
 $("playerSearch").addEventListener("input", event => {
-    busquedaActual = event.target.value.toLowerCase().trim();
-    actualizarLeaderboard();
+  busquedaActual = event.target.value.toLowerCase().trim();
+  updateLeaderboard();
 });
 
-document.querySelectorAll("#modo-menu .mode-tab").forEach(btn => {
-    btn.addEventListener("click", () => cambiarModo(btn.dataset.mode, btn));
+document.querySelectorAll("#modo-menu .mode-tab").forEach(button => {
+  button.addEventListener("click", () => setMode(button.dataset.mode, button));
 });
 
-document.querySelectorAll("#region-menu .region-tab").forEach(btn => {
-    btn.addEventListener("click", () => cambiarRegion(btn.dataset.region, btn));
+document.querySelectorAll("#region-menu .region-tab").forEach(button => {
+  button.addEventListener("click", () => setRegion(button.dataset.region, button));
 });
 
 document.addEventListener("keydown", event => {
-    if (event.key === "/" && document.activeElement !== $("playerSearch")) {
-        event.preventDefault();
-        $("playerSearch").focus();
-    }
+  if (event.key === "/" && document.activeElement !== $("playerSearch")) {
+    event.preventDefault();
+    $("playerSearch").focus();
+  }
 });
 
 onSnapshot(
-    collection(db, "leaderboard"),
-    snapshot => {
-        jugadores = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        actualizarLeaderboard();
-    },
-    error => {
-        console.error("Error leyendo leaderboard de Firebase:", error);
-        $("leaderboard-body").innerHTML =
-            '<tr><td colspan="5" class="empty">Firebase no permite leer el leaderboard. Revisa las reglas de Firestore.</td></tr>';
-    }
+  collection(db, "leaderboard"),
+  snapshot => {
+    jugadores = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    lastSync = new Date();
+
+    $("stat-sync").textContent = "LIVE";
+    updateLeaderboard();
+  },
+  error => {
+    console.error("Firebase leaderboard error:", error);
+    $("stat-sync").textContent = "ERROR";
+    $("leaderboard-body").innerHTML = `
+      <tr>
+        <td colspan="5" class="empty">
+          <div class="empty-icon">⚠️</div>
+          <b>Could not load the leaderboard</b>
+          <span>Check the Firestore rules and Firebase project.</span>
+        </td>
+      </tr>`;
+  }
 );
 
-actualizarLeaderboard();
+updateLeaderboard();
