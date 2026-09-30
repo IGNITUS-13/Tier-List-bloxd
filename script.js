@@ -60,16 +60,18 @@ function esc(value) {
 
 function tierScore(tier) {
   const value = String(tier || "").toUpperCase().trim();
-  if (value === "N/A" || !value) return 999;
-  const match = value.match(/^(HT|LT|T)([1-5])$/);
-  if (!match) return 998;
 
-  const type = match[1];
-  const level = Number(match[2]);
+  // Bloxd official order: HT1 (best) -> LT5 (worst).
+  const TIER_ORDER = [
+    "HT1", "LT1",
+    "HT2", "LT2",
+    "HT3", "LT3",
+    "HT4", "LT4",
+    "HT5", "LT5"
+  ];
 
-  if (type === "HT") return level;
-  if (type === "LT") return 10 + level;
-  return 20 + level;
+  const index = TIER_ORDER.indexOf(value);
+  return index === -1 ? 999 : index;
 }
 
 function tierClass(tier) {
