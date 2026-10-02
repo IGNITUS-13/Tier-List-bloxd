@@ -135,9 +135,6 @@ function modeChip(key, icon, label, player) {
 
 function updateStats(filteredCount) {
   $("stat-players").textContent = filteredCount.toLocaleString();
-  $("stat-mode").textContent = modoActual === "overall"
-    ? "OVERALL"
-    : (MODES.find(mode => mode[0] === modoActual)?.[2] || modoActual).toUpperCase();
   $("stat-sync").textContent = lastSync ? "LIVE" : "CONNECTING";
 }
 
